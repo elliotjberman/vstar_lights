@@ -3,7 +3,7 @@
 import time, random
 from colour_store import colours
 
-# Globals
+# Globals (I know, bad)
 
 NUMLEDS = 25
 
@@ -13,6 +13,12 @@ def dim_colour(colour, brightness):
     return tuple(int(x*brightness) for x in colour)
 
 # Animations
+
+class Frame():
+
+    def __init__(self, leds, opacity):
+        self.leds = leds
+        self.opacity = opacity
 
 class FullFlash():
 
@@ -25,14 +31,13 @@ class FullFlash():
         return self.frames_remaining < 0
 
     def animate(self):
-        print(self.frames_remaining, self.frames)
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
         for i in range(len(self.leds)):
             self.leds[i] = dimmed_colour 
 
         self.frames_remaining -= 1
-        return self.leds
+        return Frame(self.leds, brightness)
 
 def bottom_up(client, speed, colour):
     colour_rgb = colours[colour]
