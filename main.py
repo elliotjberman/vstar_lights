@@ -15,16 +15,16 @@ class DemoHandler(BaseHTTPRequestHandler):
         print(post_data)
 
         if post_data['channel'][0] == "0":
-            triangle = animations.FullFlash(colour="white", frames=10)
+            triangle = animations.BottomFlash(colour="white", frames=10)
 
         elif post_data['channel'][0] == "4":
-            triangle = animations.FullFlash(colour="peach", frames=10)
+            triangle = animations.TopFlash(colour="peach", frames=10)
 
         elif post_data['channel'][0] == "6":
             triangle = animations.Sparkle(colour="peach", frames=40)
 
         else:
-            triangle = animations.FullFlash(colour="mint", frames=10)
+            triangle = animations.TopFlash(colour="mint", frames=10)
 
         triangle_1.add_layer(triangle)
         self.send_response(200)
