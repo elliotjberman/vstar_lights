@@ -32,6 +32,18 @@ class Renderer:
 
         return final_leds
 
+    def blend_layers_additive(self, frame_layers):
+        # Mutability will save space over creating a new tuple per layer
+        final_leds = []
+        for i in range(25):
+            final_leds.append([0,0,0])
+        
+        for frame in frame_layers:
+            for i in range(len(frame.leds)):
+                for j in range(3):
+                    final_leds[i][j] = min(final_leds[i][j] + frame.leds[i][j], 255)
+
+        return final_leds
 
     def render(self):
         frame_layers = []
@@ -46,6 +58,7 @@ class Renderer:
                 self.layers.remove(node)
             node = next_node
 
-        leds = self.blend_layers(frame_layers)
+        # leds = self.blend_layers(frame_layers)
+        leds = self.blend_layers_additive(frame_layers)
 
         self.client.put_pixels(leds)
