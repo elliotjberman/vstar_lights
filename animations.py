@@ -6,7 +6,7 @@ from colour_store import colours
 # Globals (I know, bad)
 
 NUM_LEDS = 25
-BOTTOM_HALF = 9+7
+BOTTOM_ROW = 9
 
 # Helper functions
 
@@ -42,7 +42,7 @@ class TopFlash(Animation):
     def animate(self):
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
-        for i in range(BOTTOM_HALF, NUM_LEDS):
+        for i in range(2 * BOTTOM_ROW - 2, NUM_LEDS):
             self.leds[i] = dimmed_colour 
 
         self.frames_remaining -= 1
@@ -53,8 +53,31 @@ class BottomFlash(Animation):
     def animate(self):
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
-        for i in range(BOTTOM_HALF):
+        for i in range(BOTTOM_ROW * 2 - 2):
             self.leds[i] = dimmed_colour 
+
+        self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
+class BorderFlash(Animation):
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+        dimmed_colour = dim_colour(self.colour, brightness)
+        
+        row = BOTTOM_ROW
+        i = 0
+        for i in range(row):
+            self.leds[i] = dimmed_colour
+        i = row
+        row -= 2
+
+        while row > 0:
+            self.leds[i] = dimmed_colour 
+            self.leds[i+row-1] = dimmed_colour
+
+            i += row
+            row -= 2
 
         self.frames_remaining -= 1
         return Frame(self.leds, brightness)
@@ -66,7 +89,7 @@ class Sparkle(Animation):
 
     def animate(self):
         brightness = self.frames_remaining / self.frames
-        for _ in range(4):
+        for _ in range(1):
             choice = random.randrange(0, NUM_LEDS)
             self.leds[choice] = self.colour
         for i in range(len(self.leds)):
@@ -84,7 +107,7 @@ class Frame():
 
 class BottomUp(Animation):
 
-    def animate():
+    def animate(self):
         brightness = self.frames_remaining / self.frames
 
         for i in range(total):
@@ -99,7 +122,7 @@ def top_down(client, speed, colour):
 
     total=1
     row_size=1
-    while row_size <= 9:
+    while row_size <= BOTTOM_ROW:
         frame = [(0,0,0)] * NUM_LEDS
         i = total
         while i:
@@ -112,7 +135,7 @@ def top_down(client, speed, colour):
 
     total=1
     row_size=1
-    while row_size <= 9:
+    while row_size <= BOTTOM_ROW:
         frame = [colour_rgb] * NUM_LEDS
         i = total
         while i:
