@@ -1,23 +1,41 @@
 #!env/bin/python3.5
 
-import opc, time, atexit
+import urllib, threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import animations, renderer
-import keyboard
 
+PORT_NUMBER = 8000
 
-renderboy = renderer.Renderer()
+class DemoHandler(BaseHTTPRequestHandler):
 
-print("Starting animation loop")
-while True:
-    if keyboard.is_pressed('space'):
-        triangle = animations.FullFlash(colour="peach", frames=60)
-        renderboy.add_layer(triangle)
-        
-    if keyboard.is_pressed('enter'):
-        triangle = animations.FullFlash(colour="mint", frames=10)
-        renderboy.add_layer(triangle)
+    def __init__(self, *args, **kwargs):
+        self.channels = [
+            animations.BottomFlash(colour="mint", frames=15),
+            animations.TopFlash(colour="off-white", frames=15),
+            animations.BorderFlash(colour="light-blue", frames=25),
+            animations.Sparkle(colour="yellow", frames=80),
+            None,
+            None,
+            None
+        ]
+        BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
 
-    
-    renderboy.render()
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = urllib.parse.parse_qs(self.rfile.read(content_length).decode())
 
-    time.sleep(1/60) # 60 FPS
+        i =  int(post_data['channel'][0])
+
+        if self.channels[i]:
+            triangle_1.add_layer(self.channels[i])
+        self.send_response(200)
+
+server = HTTPServer(('0.0.0.0', PORT_NUMBER), DemoHandler)
+triangle_1 = renderer.Renderer()
+
+def animate():
+    triangle_1.render()
+    threading.Timer(1/60, animate).start()
+
+animate()               # Thread 1
+server.serve_forever()  # Thread 2
