@@ -183,7 +183,7 @@ class MiddleOut(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, 1.1 - (abs(i - middle_row)/middle_row) - brightness))
+                                min(1, 1.4 - (abs(i - middle_row)/middle_row) - brightness))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]

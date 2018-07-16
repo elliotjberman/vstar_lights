@@ -7,7 +7,7 @@ import opc, animations, renderer
 PORT_NUMBER = 8000
 client = opc.Client('localhost:7890')
 triangles = []
-for _ in range(2):
+for _ in range(5):
     triangles.append(renderer.Renderer())
 
 class DemoHandler(BaseHTTPRequestHandler):

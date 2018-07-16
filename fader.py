@@ -33,7 +33,6 @@ def animate():
             triangle.add_layer(animation(colour=colour, frames=frames))
 
     client.put_pixels(leds) 
-
     threading.Timer(1/60, animate).start()
 
 animate()
