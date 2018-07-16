@@ -5,7 +5,7 @@ import sys
 class Renderer:
 
     def __init__(self, client_address='localhost:7890'):
-        self.client = opc.Client(client_address)
+        # self.client = opc.Client(client_address)
         self.layers = dllist()
 
     def add_layer(self, layer):
@@ -61,4 +61,5 @@ class Renderer:
         # leds = self.blend_layers(frame_layers)
         leds = self.blend_layers_additive(frame_layers)
 
-        self.client.put_pixels(leds)
+        # self.client.put_pixels(leds)
+        return leds

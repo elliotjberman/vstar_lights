@@ -2,9 +2,13 @@
 
 import urllib, threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import animations, renderer
+import opc, animations, renderer
 
 PORT_NUMBER = 8000
+client = opc.Client('localhost:7890')
+triangles = []
+for _ in range(2):
+    triangles.append(renderer.Renderer())
 
 class DemoHandler(BaseHTTPRequestHandler):
 
@@ -12,11 +16,12 @@ class DemoHandler(BaseHTTPRequestHandler):
         self.channels = [
             animations.BottomFlash(colour="mint", frames=15),
             animations.TopFlash(colour="off-white", frames=15),
-            animations.BorderFlash(colour="light-blue", frames=25),
+            animations.BorderFlash(colour="mint", frames=180),
             animations.Sparkle(colour="yellow", frames=80),
+            animations.FullFlash(colour="light-blue", frames=40),
             None,
             None,
-            None
+            animations.Sparkle(colour="yellow", frames=60),
         ]
         BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
 
@@ -27,14 +32,22 @@ class DemoHandler(BaseHTTPRequestHandler):
         i =  int(post_data['channel'][0])
 
         if self.channels[i]:
-            triangle_1.add_layer(self.channels[i])
+            triangles[1 if i > 1 else 0].add_layer(self.channels[i])
+            if i == 7:
+                triangles[0].add_layer(self.channels[i])
+
         self.send_response(200)
 
 server = HTTPServer(('0.0.0.0', PORT_NUMBER), DemoHandler)
-triangle_1 = renderer.Renderer()
 
 def animate():
-    triangle_1.render()
+    leds = []
+    for triangle in triangles:
+        leds.extend(triangle.render())
+        leds.extend([(0,0,0)] * (64 - 25))
+
+    client.put_pixels(leds) 
+
     threading.Timer(1/60, animate).start()
 
 animate()               # Thread 1

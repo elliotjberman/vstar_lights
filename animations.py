@@ -2,9 +2,9 @@
 
 import time, random
 from colour_store import colours
-
 # Globals (I know, bad)
 
+NUM_TRIANGLES = 5
 NUM_LEDS = 25
 BOTTOM_ROW = 9
 
@@ -21,6 +21,7 @@ class Animation():
         self.leds = [(0,0,0)] * NUM_LEDS
         self.frames_remaining = self.frames = frames
         self.colour = colours[colour]
+        self.row_counts = [9,7,5,3,1]
 
     def finished(self):
         return self.frames_remaining < 0
@@ -65,7 +66,7 @@ class BorderFlash(Animation):
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
         
-        row = BOTTOM_ROW
+        row = self.row_counts[0]
         i = 0
         for i in range(row):
             self.leds[i] = dimmed_colour
@@ -84,8 +85,9 @@ class BorderFlash(Animation):
 
 class Sparkle(Animation):
 
-    # def __init__(self, density=1):
-    #     self.density = density
+    def __init__(self, *args, **kwargs):
+        super(Sparkle, self).__init__(*args, **kwargs)
+        self.density = kwargs.get('density', 1)
 
     def animate(self):
         brightness = self.frames_remaining / self.frames
@@ -99,54 +101,103 @@ class Sparkle(Animation):
         return Frame(self.leds, brightness)
         
 
+class FillBottomUp(Animation):
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+
+        index = 0
+        for i in range(len(self.row_counts)):
+            # i+2 allows final row to get some time
+            colour = dim_colour(self.colour,
+                                max(0, 1 - brightness - (i-2)/len(self.row_counts)))
+                
+            for j in range(index, index+self.row_counts[i]):
+                self.leds[j] = colour
+            index += self.row_counts[i]
+
+        self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
+class FillTopDown(Animation):
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+
+        index = 0
+        for i in range(len(self.row_counts)):
+            # i+2 allows final row to get some time
+            colour = dim_colour(self.colour,
+                                max(0, (i+2)/len(self.row_counts) - brightness))
+            for j in range(index, index+self.row_counts[i]):
+                self.leds[j] = colour
+
+            index += self.row_counts[i]
+
+        self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
+
+class DrainBottomUp(Animation):
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+
+        index = 0
+        for i in range(len(self.row_counts)):
+            colour = dim_colour(self.colour,
+                                max(0, brightness - (1 - (i+1)/len(self.row_counts))))
+                
+            for j in range(index, index+self.row_counts[i]):
+                self.leds[j] = colour
+            index += self.row_counts[i]
+
+        self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
+
+class DrainTopDown(Animation):
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+
+        index = 0
+        for i in range(len(self.row_counts)):
+            colour = dim_colour(self.colour,
+                                max(0, brightness - (i-1)/len(self.row_counts)))
+                
+            for j in range(index, index+self.row_counts[i]):
+                self.leds[j] = colour
+            index += self.row_counts[i]
+
+        self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
+
+class MiddleOut(Animation):
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+        middle_row = len(self.row_counts)//2
+
+        index = 0
+        for i in range(len(self.row_counts)):
+            colour = dim_colour(self.colour,
+                                min(1, 1.1 - (abs(i - middle_row)/middle_row) - brightness))
+            for j in range(index, index+self.row_counts[i]):
+                self.leds[j] = colour
+            index += self.row_counts[i]
+
+        self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
+
 class Frame():
 
     def __init__(self, leds, opacity):
         self.leds = leds
         self.opacity = opacity
 
-class BottomUp(Animation):
-
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-
-        for i in range(total):
-            self.leds[i] = self.colour
-        row_size -= 2
-        total += row_size
-        return Frame(self.leds, brightness)
-
-
-def top_down(client, speed, colour):
-    colour_rgb = colours[colour]
-
-    total=1
-    row_size=1
-    while row_size <= BOTTOM_ROW:
-        frame = [(0,0,0)] * NUM_LEDS
-        i = total
-        while i:
-            frame[-i] = colour_rgb
-            i -=1
-        client.put_pixels(frame)
-        time.sleep(speed)
-        row_size += 2
-        total += row_size
-
-    total=1
-    row_size=1
-    while row_size <= BOTTOM_ROW:
-        frame = [colour_rgb] * NUM_LEDS
-        i = total
-        while i:
-            frame[-i] = (0,0,0)
-            i -=1
-        client.put_pixels(frame)
-        time.sleep(speed)
-        row_size += 2
-        total += row_size
-
-
 
 def clear(client):
-    client.put_pixels([(0,0,0)] * NUM_LEDS)
+    client.put_pixels([(0,0,0)] * 64 * NUM_TRIANGLES)
