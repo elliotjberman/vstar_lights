@@ -5,7 +5,6 @@ from colour_store import colours
 
 # Globals (I know, bad)
 NUM_TRIANGLES = 5
-NUM_LEDS = 25
 
 # Helper functions and classes
 
@@ -26,10 +25,10 @@ class Frame():
 class Animation():
 
     def __init__(self, frames=60, colour="white"):
-        self.leds = [(0,0,0)] * NUM_LEDS
+        self.row_counts = [9,7,5,3,1]
+        self.leds = [(0,0,0)] * sum(self.row_counts)
         self.frames_remaining = self.frames = frames
         self.colour = colours[colour]
-        self.row_counts = [9,7,5,3,1]
 
     def finished(self):
         return self.frames_remaining < 0
@@ -51,7 +50,7 @@ class TopFlash(Animation):
     def animate(self):
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
-        for i in range(2 * self.row_counts[0] - 2, NUM_LEDS):
+        for i in range(2 * self.row_counts[0] - 2, sum(self.row_counts)):
             self.leds[i] = dimmed_colour 
 
         self.frames_remaining -= 1
@@ -100,7 +99,7 @@ class Sparkle(Animation):
     def animate(self):
         brightness = self.frames_remaining / self.frames
         for _ in range(1):
-            choice = random.randrange(0, NUM_LEDS)
+            choice = random.randrange(0, sum(self.row_counts))
             self.leds[choice] = self.colour
         for i in range(len(self.leds)):
             self.leds[i] = dim_colour(self.leds[i], brightness)
