@@ -2,16 +2,24 @@
 
 import time, random
 from colour_store import colours
-# Globals (I know, bad)
 
+# Globals (I know, bad)
 NUM_TRIANGLES = 5
 NUM_LEDS = 25
-BOTTOM_ROW = 9
 
-# Helper functions
+# Helper functions and classes
 
 def dim_colour(colour, brightness):
     return tuple(int(x*brightness) for x in colour)
+
+def clear_all(client):
+    client.put_pixels([(0,0,0)] * 64 * NUM_TRIANGLES)
+
+class Frame():
+
+    def __init__(self, leds, opacity):
+        self.leds = leds
+        self.opacity = opacity
 
 # Animations
 
@@ -43,7 +51,7 @@ class TopFlash(Animation):
     def animate(self):
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
-        for i in range(2 * BOTTOM_ROW - 2, NUM_LEDS):
+        for i in range(2 * self.row_counts[0] - 2, NUM_LEDS):
             self.leds[i] = dimmed_colour 
 
         self.frames_remaining -= 1
@@ -54,7 +62,7 @@ class BottomFlash(Animation):
     def animate(self):
         brightness = self.frames_remaining / self.frames
         dimmed_colour = dim_colour(self.colour, brightness)
-        for i in range(BOTTOM_ROW * 2 - 2):
+        for i in range(self.row_counts[0] * 2 - 2):
             self.leds[i] = dimmed_colour 
 
         self.frames_remaining -= 1
@@ -190,14 +198,3 @@ class MiddleOut(Animation):
 
         self.frames_remaining -= 1
         return Frame(self.leds, brightness)
-
-
-class Frame():
-
-    def __init__(self, leds, opacity):
-        self.leds = leds
-        self.opacity = opacity
-
-
-def clear(client):
-    client.put_pixels([(0,0,0)] * 64 * NUM_TRIANGLES)
