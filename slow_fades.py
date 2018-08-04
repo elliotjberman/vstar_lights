@@ -5,7 +5,7 @@ import animations, renderer, opc
 from colour_store import colours
 
 triangles = []
-for _ in range(2):
+for _ in range(7):
     triangles.append(renderer.Renderer())
 
 client = opc.Client('localhost:7890')
@@ -34,6 +34,6 @@ def animate():
             triangle.add_layer(animation(colour=colour, frames=frames))
 
     client.put_pixels(leds) 
-    threading.Timer(1, animate).start()
+    threading.Timer(2/3, animate).start()
 
 animate()

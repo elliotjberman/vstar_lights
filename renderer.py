@@ -5,7 +5,7 @@ import sys
 class Renderer:
 
     def __init__(self, client_address='localhost:7890'):
-        # self.client = opc.Client(client_address)
+        self.client = opc.Client(client_address)
         self.layers = dllist()
 
     def add_layer(self, layer):

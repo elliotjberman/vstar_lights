@@ -24,11 +24,11 @@ class Frame():
 
 class Animation():
 
-    def __init__(self, frames=60, colour="white"):
+    def __init__(self, *args, **kwargs):
         self.row_counts = [9,7,5,3,1]
         self.leds = [(0,0,0)] * sum(self.row_counts)
-        self.frames_remaining = self.frames = frames
-        self.colour = colours[colour]
+        self.frames_remaining = self.frames = kwargs['frames']
+        self.colour = colours[kwargs['colour']]
 
     def finished(self):
         return self.frames_remaining < 0
@@ -98,7 +98,7 @@ class Sparkle(Animation):
 
     def animate(self):
         brightness = self.frames_remaining / self.frames
-        for _ in range(1):
+        for _ in range(self.density):
             choice = random.randrange(0, sum(self.row_counts))
             self.leds[choice] = self.colour
         for i in range(len(self.leds)):
