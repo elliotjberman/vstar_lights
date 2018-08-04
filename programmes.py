@@ -5,17 +5,36 @@ class Programme:
 
     def __init__(self, triggers):
         self.triggers = triggers
+        self.persisted_layers = {}
+        for key, animation in self.triggers.items():
+            if 'persistent' in animation.kwargs:
+                self.persisted_layers[key] = {}
+
+    def read_message(self, trigger_message):
+        note = trigger_message['name'][0]
+        name = trigger_message['name'][0]
+        vel = max(0, int(trigger_message['velocity'][0]))
+        return note, name, vel
 
     def handle_message(self, trigger_message, triangles):
-        animation = self.triggers[trigger_message['name'][0]]
+        note, name, vel = self.read_message(trigger_message)
+
+        animation = self.triggers[name]
         instance = animation.animation(**animation.kwargs)
         for i in animation.triangles:
-            triangles[i].add_layer(instance)
+            if 'persistent' in animation.kwargs:
+                if self.persisted_layers[name].get(i, False):
+                    self.persisted_layers[name][i].value.reset_frames(vel/127)
+                else:
+                    self.persisted_layers[name][i] = triangles[i].add_layer(instance)
+            else:
+                triangles[i].add_layer(instance)
+
 
 Layer = namedtuple('Layer', ['animation', 'kwargs', 'triangles'])
 
 europe = Programme({
-    'juno': Layer(animations.FullFlash, {'colour': "blue", 'frames': 40}, [0]),
+    'juno': Layer(animations.FullFlash, {'colour': "blue", 'frames': 120, 'persistent': True}, [0]),
     'mini': Layer(animations.DrainBottomUp, {'colour': "light-blue", 'frames': 40}, [1, 3]),
     'kick': Layer(animations.DrainTopDown, {'colour': "white", 'frames': 7}, [2]),
     'snare': Layer(animations.Sparkle, {'colour': "off-white", 'frames': 7}, [2]),
@@ -26,7 +45,7 @@ europe = Programme({
 })
 
 red_europe = Programme({
-    'juno': Layer(animations.FullFlash, {'colour': "red", 'frames': 40}, [0]),
+    'juno': Layer(animations.FullFlash, {'colour': "red", 'frames': 120}, [0]),
     'mini': Layer(animations.DrainBottomUp, {'colour': "orange", 'frames': 40}, [1, 3]),
     'kick': Layer(animations.DrainTopDown, {'colour': "white", 'frames': 7}, [2]),
     'snare': Layer(animations.Sparkle, {'colour': "off-white", 'frames': 7}, [2]),
