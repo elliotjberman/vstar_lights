@@ -61,4 +61,5 @@ class Renderer:
         # leds = self.blend_layers(frame_layers)
         leds = self.blend_layers_additive(frame_layers)
 
-        self.client.put_pixels(leds)
+        # self.client.put_pixels(leds)
+        return leds
