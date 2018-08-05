@@ -29,8 +29,9 @@ class Animation():
         self.leds = [(0,0,0)] * sum(self.row_counts)
         self.colour = colours[kwargs['colour']]
         self.persistent = persistent
-        self.frames_remaining = kwargs['frames']
-        self.frames = self.frames_remaining
+        self.frames = kwargs['frames']
+        bright_level = kwargs.get('bright_level', 1)
+        self.frames_remaining = int(self.frames * bright_level)
 
     def reset_frames(self, proportion=1):
         self.frames_remaining = int(proportion * self.frames)
@@ -103,7 +104,7 @@ class Sparkle(Animation):
 
     def __init__(self, *args, **kwargs):
         super(Sparkle, self).__init__(*args, **kwargs)
-        self.density = kwargs.get('density', 1)
+        self.density = kwargs.get('density', 1) # 1-25 is valid
 
     def animate(self):
         brightness = self.frames_remaining / self.frames
@@ -184,7 +185,7 @@ class DrainTopDown(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, brightness - (i-1)/len(self.row_counts)))
+                                max(0, brightness - (i)/len(self.row_counts)))
                 
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour

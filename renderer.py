@@ -9,6 +9,9 @@ class Renderer:
     def add_layer(self, layer):
         return self.layers.append(layer)
 
+    def clear_layers(self):
+        self.layers.clear()
+
     def blend_layers(self, frame_layers):
         final_leds = []
         for i in range(25):

@@ -54,10 +54,14 @@ def on_press(key):
         if i < len(set_list)-1:
             i+=1
         print(set_list[i])
+        for triangle in triangles:
+            triangle.clear_layers()
     if key == keyboard.Key.left:
         if i > 0:
             i-=1
         print(set_list[i])
+        for triangle in triangles:
+            triangle.clear_layers()
     elif key == keyboard.Key.esc:
         sys.exit()
 
