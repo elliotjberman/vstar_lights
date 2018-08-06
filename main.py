@@ -2,9 +2,10 @@
 
 import urllib, threading, sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from setproctitle import setproctitle
 from pynput import keyboard
 import opc, renderer
-from programmes import *
+from songs import *
 
 PORT_NUMBER = 8000
 client = opc.Client('localhost:7890')
@@ -15,10 +16,12 @@ for _ in range(5):
 # Global crap
 i=0
 programmes = {
+    'test': test,
     'europe': europe,
-    'red_europe': red_europe
+    'red_europe': red_europe,
+    'late_ambient': late_ambient,
 }
-set_list = ['europe', 'red_europe']
+set_list = ['test', 'europe', 'red_europe', 'late_ambient']
 
 
 class TriggerHandler(BaseHTTPRequestHandler):
