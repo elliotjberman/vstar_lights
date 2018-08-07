@@ -2,9 +2,11 @@ import animations
 from programme import Programme, Layer
 
 test = Programme({
-    'kick': Layer(animations.FullFlash, {'colour': "blue", 'frames': 5}, [x for x in range(5)]),
-    'snare': Layer(animations.FullFlash, {'colour': "orange", 'frames': 5}, [x for x in range(5)]),
-    'verb': Layer(animations.Sparkle, {'colour': "blue", 'frames': 5, 'persistent': True}, [x for x in range(5)]),
+    'kick': Layer(animations.DrainTopDown, {'colour': "off-white", 'frames': 10}, [2]),
+    'snare': Layer(animations.DrainBottomUp, {'colour': "yellow", 'frames': 10}, [1]),
+    'verb': Layer(animations.Sparkle, {'colour': "orange", 'frames': 5, 'persistent': True}, [x for x in range(5)]),
+    'mini': Layer(animations.DrainOutsideIn, {'colour': "peach", 'frames': 300, 'persistent': True}, [0]),
+    # 'mini': Layer(animations.FullFlash, {'colour': "peach", 'frames': 60, 'persistent': True}, [0]),
 })
 
 europe = Programme({
