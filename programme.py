@@ -26,7 +26,7 @@ class Programme:
         for i in animation.triangles:
             instance = animation.animation(**animation.kwargs)
             if 'persistent' in animation.kwargs:
-                if self.persisted_layers[name].get(i, False) and not self.persisted_layers[name][i]:
+                if self.persisted_layers[name].get(i, False):
                     self.persisted_layers[name][i].value.reset_frames(animation.kwargs['bright_level'])
                 else:
                     self.persisted_layers[name][i] = triangles[i].add_layer(instance)
