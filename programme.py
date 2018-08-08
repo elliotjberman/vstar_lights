@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 def vel_scale(vel):
-    return vel/127
+    return min(1, (vel ** 2.1) / (127**2))
 
 class Programme:
 
@@ -23,11 +23,10 @@ class Programme:
 
         animation = self.triggers[name]
         animation.kwargs['bright_level'] = vel_scale(vel)
-        print(animation.kwargs['bright_level'])
         for i in animation.triangles:
             instance = animation.animation(**animation.kwargs)
             if 'persistent' in animation.kwargs:
-                if self.persisted_layers[name].get(i, False):
+                if self.persisted_layers[name].get(i, False) and not self.persisted_layers[name][i]:
                     self.persisted_layers[name][i].value.reset_frames(animation.kwargs['bright_level'])
                 else:
                     self.persisted_layers[name][i] = triangles[i].add_layer(instance)

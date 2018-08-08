@@ -2,36 +2,37 @@ import animations
 from programme import Programme, Layer
 
 test = Programme({
-    'kick': Layer(animations.DrainTopDown, {'colour': "off-white", 'frames': 10}, [2]),
+    'kick': Layer(animations.BottomFlash, {'colour': "off-white", 'frames': 10}, [2]),
     'snare': Layer(animations.DrainBottomUp, {'colour': "yellow", 'frames': 10}, [1]),
-    'verb': Layer(animations.Sparkle, {'colour': "orange", 'frames': 5, 'persistent': True}, [x for x in range(5)]),
-    'mini': Layer(animations.DrainOutsideIn, {'colour': "peach", 'frames': 300, 'persistent': True}, [0]),
-    # 'mini': Layer(animations.FullFlash, {'colour': "peach", 'frames': 60, 'persistent': True}, [0]),
+    'weird': Layer(animations.DrainMiddleOut, {'colour': "orange", 'frames': 40}, [3]),
+    'verb': Layer(animations.Sparkle, {'colour': "orange", 'frames': 2, 'persistent': True}, [x for x in range(5)]),
+    'mini': Layer(animations.BorderFlash, {'colour': "red", 'frames': 3000, 'persistent': True}, [4]),
+    'juno': Layer(animations.DrainOutsideIn, {'colour': "peach", 'frames': 3000, 'persistent': True}, [2]),
+    'moog': Layer(animations.BorderFlash, {'colour': "magenta", 'frames': 60, }, [0]),
 })
 
 europe = Programme({
-    'juno': Layer(animations.FullFlash, {'colour': "royal-blue", 'frames': 120, 'persistent': True}, [0]),
-    'mini': Layer(animations.DrainBottomUp, {'colour': "light-blue", 'frames': 40}, [1, 3]),
-    'kick': Layer(animations.DrainTopDown, {'colour': "white", 'frames': 7}, [2]),
-    'snare': Layer(animations.DrainBottomUp, {'colour': "off-white", 'frames': 7}, [2]),
-    '202': Layer(animations.Sparkle, {'colour': "mint", 'frames': 10}, [4]),
+    'juno': Layer(animations.FullFlash, {'colour': "royal-blue", 'frames': 60, 'persistent': True}, [0]),
+    'mini': Layer(animations.DrainBottomUp, {'colour': "light-blue", 'frames': 30}, [1, 3]),
+    'kick': Layer(animations.BottomFlash, {'colour': "white", 'frames': 3}, [2]),
+    'snare': Layer(animations.TopFlash, {'colour': "off-white", 'frames': 3}, [2]),
+    '202': Layer(animations.Sparkle, {'colour': "mint", 'frames': 5}, [4]),
     'blip': Layer(animations.DrainTopDown, {'colour': "violet", 'frames': 10}, [4]),
-    'demon': Layer(animations.BorderFlash, {'colour': "red", 'frames': 50}, [0,4]),
-    'verb': Layer(animations.Sparkle, {'colour': "blue", 'frames': 5}, [x for x in range(5)]),
-})
-
-red_europe = Programme({
-    'juno': Layer(animations.FullFlash, {'colour': "red", 'frames': 120}, [0]),
-    'mini': Layer(animations.DrainBottomUp, {'colour': "orange", 'frames': 40}, [1, 3]),
-    'kick': Layer(animations.DrainTopDown, {'colour': "white", 'frames': 7}, [2]),
-    'snare': Layer(animations.DrainBottomUp, {'colour': "off-white", 'frames': 7}, [2]),
-    '202': Layer(animations.Sparkle, {'colour': "yellow", 'frames': 10}, [4]),
-    'blip': Layer(animations.DrainTopDown, {'colour': "red", 'frames': 10}, [4]),
-    'demon': Layer(animations.BorderFlash, {'colour': "blue", 'frames': 50}, [0,4]),
-    'verb': Layer(animations.Sparkle, {'colour': "peach", 'frames': 5}, [x for x in range(0,5)]),
+    'demon': Layer(animations.BorderFlash, {'colour': "red", 'frames': 25}, [0,4]),
+    'verb': Layer(animations.Sparkle, {'colour': "blue", 'frames': 5, 'density': 2}, [x for x in range(5)]),
 })
 
 late_ambient = Programme({
     '202': Layer(animations.BorderFlash, {'colour': "orange", 'frames': 30}, [0, 4]),
     'mini': Layer(animations.DrainTopDown, {'colour': "yellow", 'frames': 10, 'persistent': True}, [1,2,3]),
 })
+
+plain = Programme({
+    'jsample': Layer(animations.DrainOutsideIn, {'colour': 'yellow', 'frames': 25}, [2]),
+    'crash': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 50}, [0,4]),
+    'verb': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 40, 'persistent': True}, [0,1,3,4]),
+    'mini': Layer(animations.FullFlash, {'colour': 'cyan', 'frames': 40, 'persistent': True}, [1,3]),
+    'windy': Layer(animations.RandomLines, {'colour': 'royal-blue', 'frames': 5}, [x for x in range(5)]),
+})
+
+

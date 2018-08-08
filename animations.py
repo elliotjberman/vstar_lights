@@ -120,6 +120,26 @@ class Sparkle(Animation):
         return Frame(self.leds, brightness)
         
 
+class RandomLines(Animation):
+
+    def __init__(self, *args, **kwargs):
+        super(RandomLines, self).__init__(*args, **kwargs)
+        self.ranges = [range(0, 9), range(9, 16), range(16, 21), range(21, 24), range(24, 25)]
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+
+        rand_range = random.choice(self.ranges)
+        for i in rand_range:
+            self.leds[i] = self.colour
+        for i in range(len(self.leds)):
+            self.leds[i] = dim_colour(self.leds[i], brightness)
+        
+        if not self.persistent:
+            self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+        
+
 class FillBottomUp(Animation):
 
     def animate(self):

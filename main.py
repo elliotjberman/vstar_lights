@@ -15,13 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-programmes = {
-    'test': test,
-    'europe': europe,
-    'red_europe': red_europe,
-    'late_ambient': late_ambient,
-}
-set_list = ['test', 'europe', 'red_europe', 'late_ambient']
+set_list = [plain]
 
 
 class TriggerHandler(BaseHTTPRequestHandler):
@@ -34,7 +28,7 @@ class TriggerHandler(BaseHTTPRequestHandler):
         post_data = urllib.parse.parse_qs(self.rfile.read(content_length).decode())
 
         global i
-        programme = programmes[set_list[i]]
+        programme = set_list[i]
         programme.handle_message(post_data, triangles)
 
         self.send_response(200)
@@ -48,7 +42,8 @@ def animate():
 
     client.put_pixels(leds)
 
-    threading.Timer(1/60, animate).start()
+    # 60 FPS blitzes ableton
+    threading.Timer(1/30, animate).start()
 
 # Keyboard crap
 def on_press(key):
