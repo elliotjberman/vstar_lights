@@ -2,9 +2,10 @@
 
 import urllib, threading, sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from setproctitle import setproctitle
 from pynput import keyboard
 import opc, renderer
-from programmes import *
+from songs import *
 
 PORT_NUMBER = 8000
 client = opc.Client('localhost:7890')
@@ -14,12 +15,14 @@ for _ in range(5):
 
 # Global crap
 i=0
-programmes = {
-    'europe': europe,
-    'red_europe': red_europe
-}
-set_list = ['europe', 'red_europe']
+set_list = [plain, europe]
 
+def reset_crap():
+    for j in range(len(set_list)):
+        for key in set_list[j].persisted_layers.keys():
+            set_list[j].persisted_layers[key] = {}
+    for triangle in triangles:
+        triangle.clear_layers()
 
 class TriggerHandler(BaseHTTPRequestHandler):
 
@@ -31,7 +34,7 @@ class TriggerHandler(BaseHTTPRequestHandler):
         post_data = urllib.parse.parse_qs(self.rfile.read(content_length).decode())
 
         global i
-        programme = programmes[set_list[i]]
+        programme = set_list[i]
         programme.handle_message(post_data, triangles)
 
         self.send_response(200)
@@ -45,23 +48,28 @@ def animate():
 
     client.put_pixels(leds)
 
-    threading.Timer(1/60, animate).start()
+    # 60 FPS blitzes ableton
+    threading.Timer(1/30, animate).start()
 
 # Keyboard crap
 def on_press(key):
+    global i
     if key == keyboard.Key.right:
-        global i
         if i < len(set_list)-1:
             i+=1
-        print(set_list[i])
-    if key == keyboard.Key.left:
+            print(set_list[i])
+            reset_crap()
+
+    elif key == keyboard.Key.left:
         if i > 0:
             i-=1
-        print(set_list[i])
+            print(set_list[i])
+            reset_crap()
+
     elif key == keyboard.Key.esc:
         sys.exit()
 
 listener = keyboard.Listener(on_press=on_press)
-listener.start()        # Thread 0
-animate()               # Thread 1
-server.serve_forever()  # Thread 2
+listener.start()        # Thread 1
+animate()               # Thread 2
+server.serve_forever()  # Thread 3

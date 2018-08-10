@@ -19,7 +19,10 @@ animation_types = [
                    animations.FillTopDown,
                    animations.DrainBottomUp,
                    animations.DrainTopDown,
-                   animations.MiddleOut,
+                   animations.FillMiddleOut,
+                   animations.FillOutsideIn,
+                   animations.DrainMiddleOut,
+                   animations.DrainOutsideIn,
                   ]
 
 def animate():

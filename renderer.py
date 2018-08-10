@@ -1,18 +1,18 @@
 from llist import dllist
 import opc
-import sys
 
 class Renderer:
 
-    def __init__(self, client_address='localhost:7890'):
-        self.client = opc.Client(client_address)
+    def __init__(self):
         self.layers = dllist()
 
     def add_layer(self, layer):
-        self.layers.append(layer)
+        return self.layers.append(layer)
+
+    def clear_layers(self):
+        self.layers.clear()
 
     def blend_layers(self, frame_layers):
-        # Mutability will save space over creating a new tuple per layer
         final_leds = []
         for i in range(25):
             final_leds.append([0,0,0])
@@ -20,10 +20,8 @@ class Renderer:
         total = 0
         for frame in frame_layers:
             total += frame.opacity
-
             
         if not total: return final_leds
-
         
         for frame in frame_layers:
             for i in range(len(frame.leds)):
@@ -33,7 +31,6 @@ class Renderer:
         return final_leds
 
     def blend_layers_additive(self, frame_layers):
-        # Mutability will save space over creating a new tuple per layer
         final_leds = []
         for i in range(25):
             final_leds.append([0,0,0])
@@ -58,8 +55,6 @@ class Renderer:
                 self.layers.remove(node)
             node = next_node
 
-        # leds = self.blend_layers(frame_layers)
         leds = self.blend_layers_additive(frame_layers)
 
-        # self.client.put_pixels(leds)
         return leds
