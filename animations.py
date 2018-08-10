@@ -101,6 +101,26 @@ class BorderFlash(Animation):
             self.frames_remaining -= 1
         return Frame(self.leds, brightness)
 
+class RowFlash(Animation):
+
+    def __init__(self, *args, **kwargs):
+        super(RowFlash, self).__init__(*args, **kwargs)
+        self.row = kwargs.get('row', 0)
+
+    def animate(self):
+        brightness = self.frames_remaining / self.frames
+
+        start = sum(self.row_counts[:self.row])
+        row = range(start, start + self.row_counts[self.row])
+        dimmed_colour = dim_colour(self.colour, brightness)
+
+        for i in row:
+            self.leds[i] = dimmed_colour
+
+        if not self.persistent:
+            self.frames_remaining -= 1
+        return Frame(self.leds, brightness)
+
 class Sparkle(Animation):
 
     def __init__(self, *args, **kwargs):

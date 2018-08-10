@@ -15,7 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-set_list = [plain]
+set_list = [plain, europe]
 
 
 class TriggerHandler(BaseHTTPRequestHandler):
