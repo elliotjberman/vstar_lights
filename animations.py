@@ -30,11 +30,22 @@ class Animation():
         self.colour = colours[kwargs['colour']]
         self.persistent = persistent
         self.frames = kwargs['frames']
-        bright_level = kwargs.get('bright_level', 1)
-        self.frames_remaining = int(self.frames * bright_level)
+        self.bright_level = kwargs.get('bright_level', 1)
+        self.frames_remaining = self.frames if not persistent else self.frames * self.bright_level
 
     def reset_frames(self, proportion=1):
         self.frames_remaining = int(proportion * self.frames)
+
+    def animate(self):
+        self.brightness = self.frames_remaining / self.frames
+        if not self.persistent:
+            self.brightness *= self.bright_level
+
+        frame = self.animate_inner()
+
+        if not self.persistent:
+            self.frames_remaining -= 1
+        return frame
 
     def finished(self):
         done = self.frames_remaining < 0 and not self.persistent
@@ -43,45 +54,38 @@ class Animation():
 
 class FullFlash(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-        dimmed_colour = dim_colour(self.colour, brightness)
+    def animate_inner(self):
+        dimmed_colour = dim_colour(self.colour, self.brightness)
         for i in range(len(self.leds)):
             self.leds[i] = dimmed_colour 
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 class TopFlash(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-        dimmed_colour = dim_colour(self.colour, brightness)
+    def animate_inner(self):
+        self.brightness = self.frames_remaining / self.frames
+        dimmed_colour = dim_colour(self.colour, self.brightness)
         for i in range(2 * self.row_counts[0] - 2, sum(self.row_counts)):
             self.leds[i] = dimmed_colour 
 
         if not self.persistent:
             self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 class BottomFlash(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-        dimmed_colour = dim_colour(self.colour, brightness)
+    def animate_inner(self):
+        dimmed_colour = dim_colour(self.colour, self.brightness)
         for i in range(self.row_counts[0] * 2 - 2):
             self.leds[i] = dimmed_colour 
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 class BorderFlash(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-        dimmed_colour = dim_colour(self.colour, brightness)
+    def animate_inner(self):
+        dimmed_colour = dim_colour(self.colour, self.brightness)
         
         row = self.row_counts[0]
         i = 0
@@ -97,9 +101,7 @@ class BorderFlash(Animation):
             i += row
             row -= 2
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 class RowFlash(Animation):
 
@@ -107,19 +109,15 @@ class RowFlash(Animation):
         super(RowFlash, self).__init__(*args, **kwargs)
         self.row = kwargs.get('row', 0)
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-
+    def animate_inner(self):
         start = sum(self.row_counts[:self.row])
         row = range(start, start + self.row_counts[self.row])
-        dimmed_colour = dim_colour(self.colour, brightness)
+        dimmed_colour = dim_colour(self.colour, self.brightness)
 
         for i in row:
             self.leds[i] = dimmed_colour
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 class Sparkle(Animation):
 
@@ -127,17 +125,14 @@ class Sparkle(Animation):
         super(Sparkle, self).__init__(*args, **kwargs)
         self.density = kwargs.get('density', 1) # 1-25 is valid
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
+    def animate_inner(self):
         for _ in range(self.density):
             choice = random.randrange(0, sum(self.row_counts))
             self.leds[choice] = self.colour
         for i in range(len(self.leds)):
-            self.leds[i] = dim_colour(self.leds[i], brightness)
+            self.leds[i] = dim_colour(self.leds[i], self.brightness)
         
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
         
 
 class RandomLines(Animation):
@@ -146,167 +141,137 @@ class RandomLines(Animation):
         super(RandomLines, self).__init__(*args, **kwargs)
         self.ranges = [range(0, 9), range(9, 16), range(16, 21), range(21, 24), range(24, 25)]
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-
+    def animate_inner(self):
         rand_range = random.choice(self.ranges)
         for i in rand_range:
             self.leds[i] = self.colour
         for i in range(len(self.leds)):
-            self.leds[i] = dim_colour(self.leds[i], brightness)
-        
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+            self.leds[i] = dim_colour(self.leds[i], self.brightness)
+
+        return Frame(self.leds, self.brightness)
         
 
 class FillBottomUp(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
+    def animate_inner(self):
+        self.brightness = self.frames_remaining / self.frames
 
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, 1 - brightness - i/len(self.row_counts) + 0.5 * (1-brightness)))
+                                max(0, 1 - self.brightness - i/len(self.row_counts) + 0.5 * (1-self.brightness)))
                 
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 class FillTopDown(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-
+    def animate_inner(self):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, (i)/len(self.row_counts) - brightness + 0.5 * (1-brightness)))
+                                max(0, (i)/len(self.row_counts) - self.brightness + 0.5 * (1-self.brightness)))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
 
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 
 class DrainBottomUp(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-
+    def animate_inner(self):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, brightness - (1 - (i)/len(self.row_counts) - brightness)))
+                                max(0, self.brightness - (1 - (i)/len(self.row_counts) - self.brightness)))
                 
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 
 class DrainTopDown(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
-
+    def animate_inner(self):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, brightness - (i)/len(self.row_counts) + 0.5 * brightness))
+                                max(0, self.brightness - (i)/len(self.row_counts) + 0.5 * self.brightness))
                 
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 
 class FillMiddleOut(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
+    def animate_inner(self):
         middle_row = len(self.row_counts)//2
-
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, 1 - (abs(i - middle_row)/middle_row) - brightness + 0.8*(1-brightness)))
+                                min(1, 1 - (abs(i - middle_row)/middle_row) - self.brightness + 0.8*(1 - self.brightness)))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 
 class FillOutsideIn(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
+    def animate_inner(self):
         middle_row = len(self.row_counts)//2
-
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, (abs(i - middle_row)/middle_row) - brightness + 0.5*(1-brightness)))
+                                min(1, (abs(i - middle_row)/middle_row) - self.brightness + 0.5*(1 - self.brightness)))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 
 class DrainMiddleOut(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
+    def animate_inner(self):
         middle_row = len(self.row_counts)//2
 
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, (abs(i - middle_row)/middle_row) + brightness - 1 + 0.5 * brightness))
+                                max(0, (abs(i - middle_row)/middle_row) + self.brightness - 1 + 0.5 * self.brightness))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 
 
 class DrainOutsideIn(Animation):
 
-    def animate(self):
-        brightness = self.frames_remaining / self.frames
+    def animate_inner(self):
         middle_row = len(self.row_counts)//2
 
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, brightness - (abs(i - middle_row)/middle_row) + 0.5 * brightness))
+                                max(0, self.brightness - (abs(i - middle_row)/middle_row) + 0.5 * self.brightness))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
         if not self.persistent:
             self.frames_remaining -= 1
-        return Frame(self.leds, brightness)
+        return Frame(self.leds, self.brightness)
 

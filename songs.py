@@ -1,4 +1,5 @@
 import animations
+import random
 from programme import Programme, Layer
 
 test = Programme({
@@ -28,11 +29,14 @@ late_ambient = Programme({
 })
 
 plain = Programme({
-    'jsample': Layer(animations.DrainOutsideIn, {'colour': 'yellow', 'frames': 25}, [2]),
-    'crash': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 50}, [0,4]),
+    'jsample': Layer(animations.DrainOutsideIn, {'colour': 'yellow', 'frames': 60}, [2]),
+    'crash': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 60}, [0,4]),
     'verb': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 40, 'persistent': True}, [0,1,3,4]),
-    'mini': Layer(animations.FullFlash, {'colour': 'cyan', 'frames': 40, 'persistent': True}, [1,3]),
+    'mini': Layer(animations.FullFlash, {'colour': 'neon', 'frames': 40, 'persistent': True}, [1,3]),
     'windy': Layer(animations.RandomLines, {'colour': 'royal-blue', 'frames': 5}, [x for x in range(5)]),
+    'boards': Layer(animations.DrainOutsideIn, {'colour': 'off-white', 'frames': 100, 'persistent': True}, [2]),
+    'a-section': Layer(animations.Sparkle, {'colour': 'pastel-blue', 'frames': 240, 'density': 25}, [0,2,4]),
+    'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 10}, [0,4]),
 })
 
 
