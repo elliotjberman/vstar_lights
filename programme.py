@@ -7,7 +7,13 @@ def vel_scale(vel):
 
     result = 1/(1+c/math.exp(k*vel))
     return result
-    return min(1, (vel ** 2.1) / (127**2))
+
+def scale_to_x(x, value, bottom, top):
+    if value < bottom or value > top:
+        return -1
+
+    return int((value-bottom) / (top-bottom-1) * x)
+
 
 
 class Programme:
@@ -20,7 +26,7 @@ class Programme:
                 self.persisted_layers[key] = {}
 
     def read_message(self, trigger_message):
-        note = trigger_message['name'][0]
+        note = int(trigger_message['note'][0])
         name = trigger_message['name'][0]
         vel = max(0, int(trigger_message['velocity'][0]))
         return note, name, vel
@@ -30,6 +36,7 @@ class Programme:
 
         animation = self.triggers[name]
         animation.kwargs['bright_level'] = vel_scale(vel)
+        animation.kwargs['note'] = note
         for i in animation.triangles:
             instance = animation.animation(**animation.kwargs)
             if 'persistent' in animation.kwargs:
@@ -42,3 +49,18 @@ class Programme:
 
 
 Layer = namedtuple('Layer', ['animation', 'kwargs', 'triangles'])
+
+class ComplexLayer:
+
+    def __init__(self, bottom=0, top=0, scale_layers=None, explicit_layers=None):
+        self.bottom = bottom
+        self.top = top
+        self.scale_layers = scale_layers or []
+        self.explicit_layers = explicit_layers or {}
+
+    def read_note(self, note):
+        if note in self.explicit_layers:
+            return explicit_layers[note]
+        scaled_note = scale_to_x(len(self.scale_layers),note, self.top, self.bottom)
+        return self.scale_layers[scaled_note]
+

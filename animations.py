@@ -107,6 +107,7 @@ class RowFlash(Animation):
 
     def __init__(self, *args, **kwargs):
         super(RowFlash, self).__init__(*args, **kwargs)
+        scale = kwargs.get('scale', (0, 127)) 
         self.row = kwargs.get('row', 0)
 
     def animate_inner(self):

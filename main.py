@@ -15,7 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-set_list = [plain, europe]
+set_list = [octopus]
 
 def reset_crap():
     for j in range(len(set_list)):

@@ -39,4 +39,8 @@ plain = Programme({
     'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 10}, [0,4]),
 })
 
-
+octopus = Programme({
+    '202': Layer(animations.RowFlash, {'colour': 'red', 'frames': 15, 'scale': (28, 58)}, [x for x in range(5)]),
+    'moog': Layer(animations.FillMiddleOut, {'colour': 'gold', 'frames': 5}, [4]),
+    'drums': Layer(animations.BottomFlash, {'colour': "white", 'frames': 3}, [2]),
+})
