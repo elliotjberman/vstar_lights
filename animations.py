@@ -69,8 +69,6 @@ class TopFlash(Animation):
         for i in range(2 * self.row_counts[0] - 2, sum(self.row_counts)):
             self.leds[i] = dimmed_colour 
 
-        if not self.persistent:
-            self.frames_remaining -= 1
         return Frame(self.leds, self.brightness)
 
 class BottomFlash(Animation):
@@ -107,6 +105,7 @@ class RowFlash(Animation):
 
     def __init__(self, *args, **kwargs):
         super(RowFlash, self).__init__(*args, **kwargs)
+        scale = kwargs.get('scale', (0, 127)) 
         self.row = kwargs.get('row', 0)
 
     def animate_inner(self):
@@ -154,8 +153,6 @@ class RandomLines(Animation):
 class FillBottomUp(Animation):
 
     def animate_inner(self):
-        self.brightness = self.frames_remaining / self.frames
-
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
@@ -219,7 +216,7 @@ class FillMiddleOut(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, 1 - (abs(i - middle_row)/middle_row) - self.brightness + 0.8*(1 - self.brightness)))
+                                min(1, 1 - (abs(i - middle_row)/middle_row) - self.brightness + 0.8 * (1 - self.brightness)))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
@@ -234,7 +231,7 @@ class FillOutsideIn(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, (abs(i - middle_row)/middle_row) - self.brightness + 0.5*(1 - self.brightness)))
+                                min(1, (abs(i - middle_row)/middle_row) - self.brightness + 0.5 * (1 - self.brightness)))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
@@ -250,7 +247,7 @@ class DrainMiddleOut(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                max(0, (abs(i - middle_row)/middle_row) + self.brightness - 1 + 0.5 * self.brightness))
+                                max(0, (abs(i - middle_row)/middle_row) + self.brightness - 1 + 0.8 * self.brightness))
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
@@ -271,7 +268,5 @@ class DrainOutsideIn(Animation):
                 self.leds[j] = colour
             index += self.row_counts[i]
 
-        if not self.persistent:
-            self.frames_remaining -= 1
         return Frame(self.leds, self.brightness)
 

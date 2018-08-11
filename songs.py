@@ -1,6 +1,6 @@
 import animations
 import random
-from programme import Programme, Layer
+from programme import Programme, Layer, ComplexLayer
 
 test = Programme({
     'kick': Layer(animations.BottomFlash, {'colour': "off-white", 'frames': 10}, [2]),
@@ -39,4 +39,23 @@ plain = Programme({
     'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 10}, [0,4]),
 })
 
-
+octopus = Programme({
+    '202': ComplexLayer(
+        bottom=28, top=60,
+        explicit_layers = {
+            28: Layer(animations.RowFlash, {'colour': "red", 'frames': 15, 'row': 0}, [1,3]),
+            57: Layer(animations.RowFlash, {'colour': "red", 'frames': 15, 'row': 4}, [1,3]),
+        },
+        scale_layers = [Layer(animations.RowFlash, {'colour': 'red', 'frames': 15, 'scale': (28, 58), 'row': x}, [1,3]) for x in range(1, 4)],
+    ),
+    'moog': Layer(animations.FillMiddleOut, {'colour': 'gold', 'frames': 5}, [4]),
+    'drums': ComplexLayer(
+        explicit_layers = {
+            36: Layer(animations.BottomFlash, {'colour': "white", 'frames': 5}, [2]),
+            38: Layer(animations.TopFlash, {'colour': "pastel-red", 'frames': 5}, [2]),
+            39: Layer(animations.TopFlash, {'colour': "pastel-red", 'frames': 5}, [2]),
+            49: Layer(animations.BorderFlash, {'colour': "coral", 'frames': 5}, [0,4]),
+        } 
+    ),
+    'mini': Layer(animations.RandomLines, {'colour': 'mint', 'frames': 5}, [x for x in range(5)]),
+})
