@@ -15,7 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-set_list = [octopus]
+set_list = [plain, octopus]
 
 def reset_crap():
     for j in range(len(set_list)):
@@ -48,7 +48,7 @@ def animate():
 
     client.put_pixels(leds)
 
-    # 60 FPS blitzes ableton
+    # 30 fps is fine
     threading.Timer(1/30, animate).start()
 
 # Keyboard crap

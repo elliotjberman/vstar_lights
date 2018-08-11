@@ -35,7 +35,17 @@ plain = Programme({
     'mini': Layer(animations.FullFlash, {'colour': 'neon', 'frames': 40, 'persistent': True}, [1,3]),
     'windy': Layer(animations.RandomLines, {'colour': 'royal-blue', 'frames': 5}, [x for x in range(5)]),
     'boards': Layer(animations.DrainOutsideIn, {'colour': 'off-white', 'frames': 100, 'persistent': True}, [2]),
-    'a-section': Layer(animations.Sparkle, {'colour': 'pastel-blue', 'frames': 240, 'density': 25}, [0,2,4]),
+    'section': ComplexLayer(
+        explicit_layers = {
+            # A section
+            60: Layer(animations.Sparkle, {'colour': 'pastel-blue', 'frames': 240, 'density': 25}, [0,2,4]),
+            # C Section
+            72: Layer(animations.FillTopDown, {'colour': 'pastel-green', 'frames': 30, 'pad': 30}, [0,2,4]),
+            73: Layer(animations.FillBottomUp, {'colour': 'pastel-green', 'frames': 30, 'pad': 30}, [0,2,4]),
+            74: Layer(animations.FillTopDown, {'colour': 'pastel-blue', 'frames': 30, 'pad': 30}, [0,2,4]),
+            75: Layer(animations.FillBottomUp, {'colour': 'pastel-blue', 'frames': 30, 'pad': 30}, [0,2,4]),
+        }
+    ), 
     'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 10}, [0,4]),
 })
 

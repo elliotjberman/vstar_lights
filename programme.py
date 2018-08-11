@@ -62,12 +62,12 @@ class Programme:
             layer = layer.read_note(note)
         if not layer: return
 
-        layer.kwargs['bright_level'] = vel_scale(vel)
+        layer.kwargs['brightness'] = vel_scale(vel)
         for i in layer.triangles:
             instance = layer.animation(**layer.kwargs)
             if 'persistent' in layer.kwargs:
                 if self.persisted_layers[name].get(i):
-                    self.persisted_layers[name][i].value.reset_frames(layer.kwargs['bright_level'])
+                    self.persisted_layers[name][i].value.reset_frames(layer.kwargs['brightness'])
                 else:
                     self.persisted_layers[name][i] = triangles[i].add_layer(instance)
             else:
