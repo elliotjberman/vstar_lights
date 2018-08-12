@@ -30,7 +30,7 @@ class Animation():
         self.colour = colours[kwargs['colour']]
         self.persistent = persistent
         self.frames = kwargs['frames']
-        self.brightness = kwargs.get('brightness', 1)
+        self.brightness = kwargs.get('brightness', 1) if not persistent else 1
         self.frames_remaining = self.frames if not persistent else 0 # fucking hack
         self.pad = min(self.frames, kwargs.get('pad', 0))
 
@@ -214,7 +214,7 @@ class FillMiddleOut(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, 1 - (abs(i - middle_row)/middle_row) - self.progress + 0.8 * (1 - self.progress)) * self.brightness)
+                                max(0, 1 - (abs(i - middle_row)/middle_row) - self.progress + 0.8 * (1 - self.progress)) * self.brightness)
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]
@@ -229,7 +229,7 @@ class FillOutsideIn(Animation):
         index = 0
         for i in range(len(self.row_counts)):
             colour = dim_colour(self.colour,
-                                min(1, (abs(i - middle_row)/middle_row) - self.progress + 0.5 * (1 - self.progress)) * self.brightness)
+                                max(0, (abs(i - middle_row)/middle_row) - self.progress + 0.5 * (1 - self.progress)) * self.brightness)
             for j in range(index, index+self.row_counts[i]):
                 self.leds[j] = colour
             index += self.row_counts[i]

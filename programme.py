@@ -40,7 +40,8 @@ class ComplexLayer:
 
 class Programme:
 
-    def __init__(self, triggers):
+    def __init__(self, name, triggers):
+        self.name = name
         self.triggers = triggers
         self.persisted_layers = {}
         for key, layer in self.triggers.items():
