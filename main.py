@@ -15,7 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-set_list = [octopus]
+set_list = [europe, plain, octopus]
 
 def reset_crap():
     for j in range(len(set_list)):
@@ -28,6 +28,12 @@ class TriggerHandler(BaseHTTPRequestHandler):
 
     def __init__(self, *args, **kwargs):
         BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
+
+    # Don't log successful messages (there's way too many)
+    def log_message(self, format, *args):
+        if args[1] != '200':
+            super(TriggerHandler, self).log_message(format, *args)
+        return
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
@@ -48,26 +54,18 @@ def animate():
 
     client.put_pixels(leds)
 
-    # 60 FPS blitzes ableton
+    # 30 fps is fine
     threading.Timer(1/30, animate).start()
 
 # Keyboard crap
 def on_press(key):
     global i
-    if key == keyboard.Key.right:
-        if i < len(set_list)-1:
-            i+=1
-            print(set_list[i])
-            reset_crap()
-
-    elif key == keyboard.Key.left:
-        if i > 0:
-            i-=1
-            print(set_list[i])
-            reset_crap()
-
-    elif key == keyboard.Key.esc:
-        sys.exit()
+    try:
+        if int(key.char) in range(len(set_list)+1):
+            i=int(key.char) - 1
+            print(set_list[i].name)
+    except Exception as e:
+        pass
 
 listener = keyboard.Listener(on_press=on_press)
 listener.start()        # Thread 1
