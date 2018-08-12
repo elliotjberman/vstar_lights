@@ -43,15 +43,16 @@ plain = Programme('plain', {
     'section': ComplexLayer(
         explicit_layers = {
             # A section
-            60: Layer(animations.Sparkle, {'colour': 'pastel-blue', 'frames': 240, 'density': 25}, [0,2,4]),
+            60: Layer(animations.FillMiddleOut, {'colour': 'pastel-blue', 'frames': 120, 'padding': 120}, [0,2,4]),
+            61: Layer(animations.FillOutsideIn, {'colour': 'royal-blue', 'frames': 120, 'padding': 120}, [0,2,4]),
             # C Section
-            72: Layer(animations.FillTopDown, {'colour': 'pastel-green', 'frames': 30, 'pad': 30}, [0,2,4]),
-            73: Layer(animations.FillBottomUp, {'colour': 'pastel-green', 'frames': 30, 'pad': 30}, [0,2,4]),
-            74: Layer(animations.FillMiddleOut, {'colour': 'pastel-blue', 'frames': 30, 'pad': 30}, [0,2,4]),
-            75: Layer(animations.FillOutsideIn, {'colour': 'pastel-blue', 'frames': 30, 'pad': 30}, [0,2,4]),
+            72: Layer(animations.FillTopDown, {'colour': 'pastel-green', 'frames': 30, 'padding': 30}, [0,2,4]),
+            73: Layer(animations.FillBottomUp, {'colour': 'pastel-green', 'frames': 30, 'padding': 30}, [0,2,4]),
+            74: Layer(animations.FillMiddleOut, {'colour': 'pastel-blue', 'frames': 30, 'padding': 30}, [0,2,4]),
+            75: Layer(animations.FillOutsideIn, {'colour': 'pastel-blue', 'frames': 30, 'padding': 30}, [0,2,4]),
         }
     ), 
-    'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 10}, [0,4]),
+    'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 8}, [0,4]),
 })
 
 octopus = Programme('octopus', {

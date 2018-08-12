@@ -32,7 +32,7 @@ class Animation():
         self.frames = kwargs['frames']
         self.brightness = kwargs.get('brightness', 1) if not persistent else 1
         self.frames_remaining = self.frames if not persistent else 0 # fucking hack
-        self.pad = min(self.frames, kwargs.get('pad', 0))
+        self.padding = min(self.frames, kwargs.get('padding', 0))
 
     def reset_frames(self, proportion=1):
         self.frames_remaining = int(proportion * self.frames)
@@ -47,7 +47,7 @@ class Animation():
         return frame
 
     def finished(self):
-        return self.frames_remaining < 0 and abs(self.frames_remaining) >= self.pad and not self.persistent
+        return self.frames_remaining < 0 and abs(self.frames_remaining) >= self.padding and not self.persistent
 
 
 class FullFlash(Animation):
