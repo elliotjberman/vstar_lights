@@ -15,7 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-set_list = [europe, plain, octopus]
+set_list = [beg, europe, teenager, blinds, jellyfish, waited]
 
 def reset_crap():
     for j in range(len(set_list)):

@@ -28,6 +28,9 @@ colours = {
     "pink"        : (255, 100, 225),
     "violet"      : (120, 0  , 255),
 
+    # mellow
+    "mellow-violet" : (200, 140, 255),
+
     # pastels
 
     "pastel-red"         : (255, 160, 122),
