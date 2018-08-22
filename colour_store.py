@@ -17,6 +17,7 @@ colours = {
     "neon"        : (200, 255, 0  ),
     "mint"        : (70 , 255, 80 ),
     "lime"        : (130, 255, 0  ),
+    "teal"        : (0  , 255, 160),
 
     "blue"        : (0  , 0  , 255),
     "cyan"        : (0  , 255, 255),
@@ -24,11 +25,14 @@ colours = {
     "light-blue"  : (130, 255, 255),
     "royal-blue"  : (65 , 105, 225),
 
+    "indigo"      : (80 , 0  , 255),
+
     "magenta"     : (255, 0  , 255),
     "pink"        : (255, 100, 225),
     "violet"      : (120, 0  , 255),
 
     # mellow
+    "mellow-yellow" : (255, 255, 100),
     "mellow-violet" : (200, 140, 255),
 
     # pastels

@@ -15,7 +15,7 @@ for _ in range(5):
 
 # Global crap
 i=0
-set_list = [beg, europe, teenager, blinds, jellyfish, waited]
+set_list = [beg, europe, hoodie, teenager, blinds, jellyfish, waited]
 
 def reset_crap():
     for j in range(len(set_list)):
@@ -29,7 +29,7 @@ class TriggerHandler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
 
-    # Don't log successful messages (there's way too many)
+    # Don't log successful messages (there are way too many)
     def log_message(self, format, *args):
         if args[1] != '200':
             super(TriggerHandler, self).log_message(format, *args)
@@ -63,6 +63,7 @@ def on_press(key):
     try:
         if int(key.char) in range(len(set_list)+1):
             i=int(key.char) - 1
+            reset_crap()
             print(set_list[i].name)
     except Exception as e:
         pass

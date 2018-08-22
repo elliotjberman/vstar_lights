@@ -151,4 +151,57 @@ blinds = Programme('blinds', {
     )    
 })
 
-hoodie = Programme('hoodie', {})
+hoodie = Programme('hoodie', {
+    # Juno
+    'juno-a': Layer(animations.FullFlash, {'colour': 'teal', 'frames': 15}, [1,3]),
+    'juno-b': ComplexLayer(
+        bottom=53, top=81,
+        scale_layers = [
+            Layer(animations.RowFlash, {'colour': 'teal', 'frames': 10, 'row': x}, [1,3]) for x in range(5)
+        ]
+    ),
+    'juno-c': ComplexLayer(
+        bottom=60, top=84,
+        scale_layers = [
+            Layer(animations.FullFlash, {'colour': 'royal-blue', 'frames': 15}, [1,3]),
+            Layer(animations.FullFlash, {'colour': 'cyan', 'frames': 15}, [1,3]),
+            Layer(animations.FullFlash, {'colour': 'teal', 'frames': 15}, [1,3]),
+            Layer(animations.FullFlash, {'colour': 'pastel-blue', 'frames': 15}, [1,3]),
+            Layer(animations.FullFlash, {'colour': 'white', 'frames': 15}, [1,3]),
+        ]
+    ),
+
+    'bass': ComplexLayer(
+        bottom=48, top=65,
+        scale_layers = [
+            Layer(animations.RowFlash, {'colour': "off-white", 'frames': 3, 'row': x}, [0,2,4]) for x in range(3)
+        ],
+        explicit_layers = {
+            69: Layer(animations.RowFlash, {'colour': "off-white", 'frames': 3, 'row': 3}, [0,2,4])
+        }
+    ),
+
+    'mini': Layer(animations.TopFlash, {'colour': 'white', 'frames': 100, 'persistent': True}, [x for x in range(5)]),
+
+    'section': ComplexLayer(
+        explicit_layers = {
+            # A section
+            60: Layer(animations.FillMiddleOut, {'colour': 'pastel-blue', 'frames': 55, 'padding': 55}, [0,2,4]),
+            61: Layer(animations.FillOutsideIn, {'colour': 'pastel-violet', 'frames': 55, 'padding': 55}, [0,2,4]),
+            62: Layer(animations.FillMiddleOut, {'colour': 'cyan', 'frames': 55, 'padding': 55}, [0,2,4]),
+            63: Layer(animations.FillOutsideIn, {'colour': 'indigo', 'frames': 55, 'padding': 55}, [0,2,4]),
+            # B Section
+            72: Layer(animations.FillTopDown, {'colour': 'pastel-yellow', 'frames': 20, 'padding': 20}, [0,2,4]),
+            73: Layer(animations.FillBottomUp, {'colour': 'pastel-green', 'frames': 20, 'padding': 20}, [0,2,4]),
+            74: Layer(animations.FillTopDown, {'colour': 'mellow-yellow', 'frames': 20, 'padding': 20}, [0,2,4]),
+            75: Layer(animations.FillBottomUp, {'colour': 'mint', 'frames': 20, 'padding': 20}, [0,2,4]),
+
+            # C Section
+            84: Layer(animations.FillBottomUp, {'colour': 'royal-blue', 'frames': 45, 'padding': 45}, [0,2,4]),
+            85: Layer(animations.FillTopDown, {'colour': 'violet', 'frames': 45, 'padding': 45}, [0,2,4]),
+            86: Layer(animations.FillMiddleOut, {'colour': 'indigo', 'frames': 45, 'padding': 45}, [0,2,4]),
+            87: Layer(animations.FillOutsideIn, {'colour': 'magenta', 'frames': 45, 'padding': 45}, [0,2,4]),
+
+        }
+    ), 
+})
