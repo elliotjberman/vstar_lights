@@ -34,12 +34,17 @@ late_ambient = Programme('late_ambient', {
 })
 
 jellyfish = Programme('jellyfish', {
+    'kick': Layer(animations.BottomFlash, {'colour': "dim-white", 'frames': 5}, [2]),
+    'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 8}, [0,4]),
+
     'jsample': Layer(animations.DrainOutsideIn, {'colour': 'yellow', 'frames': 30}, [2]),
     'crash': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 60}, [0,4]),
     'verb': Layer(animations.DrainMiddleOut, {'colour': 'lime', 'frames': 40, 'persistent': True}, [0,1,3,4]),
     'mini': Layer(animations.FullFlash, {'colour': 'neon', 'frames': 40, 'persistent': True}, [1,3]),
     'windy': Layer(animations.RandomLines, {'colour': 'royal-blue', 'frames': 5}, [x for x in range(5)]),
     'boards': Layer(animations.DrainOutsideIn, {'colour': 'off-white', 'frames': 100, 'persistent': True}, [2]),
+    'volca': Layer(animations.FillMiddleOut, {'colour': 'coral', 'frames': 12, 'padding': 12}, [4]),
+
     'section': ComplexLayer(
         explicit_layers = {
             # A section
@@ -52,8 +57,6 @@ jellyfish = Programme('jellyfish', {
             75: Layer(animations.FillOutsideIn, {'colour': 'pastel-blue', 'frames': 30, 'padding': 30}, [0,2,4]),
         }
     ), 
-    'swipe': Layer(animations.DrainBottomUp, {'colour': 'white', 'frames': 8}, [0,4]),
-    'volca': Layer(animations.FillMiddleOut, {'colour': 'coral', 'frames': 12, 'padding': 12}, [4]),
 })
 
 octopus = Programme('octopus', {
@@ -89,9 +92,17 @@ teenager = Programme('teenager', {
 })
 
 beg = Programme('beg', {
+    'kick': Layer(animations.DrainTopDown, {'colour': 'pastel-green', 'frames': 5}, [2]),
+    'snare': Layer(animations.TopFlash, {'colour': 'pastel-blue', 'frames': 5}, [1,3]),
+
+    'bass': ComplexLayer(
+        bottom=25, top=45,
+        scale_layers = [Layer(animations.FullFlash, {'colour': 'white', 'frames': 5}, [x]) for x in range(5)]
+    ),
+
+
     'filter': Layer(animations.DrainTopDown, {'colour': 'mint', 'frames': 100, 'persistent': True}, [x for x in range(5)]),
     'rhodes': Layer(animations.BorderFlash, {'colour': 'pastel-green', 'frames': 10}, [x for x in range(5)]),
-    'kick': Layer(animations.DrainTopDown, {'colour': 'pastel-green', 'frames': 5}, [2]),
     'blip': Layer(animations.DrainOutsideIn, {'colour': 'pastel-green', 'frames': 10}, [0, 4]),
     'grime': Layer(animations.Sparkle, {'colour': 'pastel-blue', 'frames': 10}, [1, 3]),
     '202': ComplexLayer(
@@ -105,19 +116,23 @@ beg = Programme('beg', {
         },
         scale_layers = [Layer(animations.RowFlash, {'colour': 'royal-blue', 'frames': 15, 'row': x}, [0,2,4]) for x in range(5)],
     ),
+    'verb': Layer(animations.RandomLines, {'colour': 'cool-white', 'frames': 5}, [0,1,3,4]),
 })
 
 waited = Programme('waited', {
-    # Drums
     'kick': Layer(animations.BottomFlash, {'colour': 'pastel-blue', 'frames': 5}, [2]),
     'rim': Layer(animations.RowFlash, {'colour': 'off-white', 'frames': 2, 'row': 4}, [1,3]),
 
     'saw': Layer(animations.DrainBottomUp, {'colour': 'mellow-violet', 'frames': 100, 'persistent': True}, [2]),
     'saw-2': Layer(animations.DrainBottomUp, {'colour': 'peach', 'frames': 100, 'persistent': True}, [2]),
+
     'pluck': Layer(animations.DrainOutsideIn, {'colour': 'pastel-violet', 'frames': 7}, [4]),
     'pluck-2': Layer(animations.DrainOutsideIn, {'colour': 'pastel-yellow', 'frames': 7}, [4]),
+    
+    'pad': Layer(animations.DrainBottomUp, {'colour': 'royal-blue', 'frames': 100, 'persistent': True}, [1,3]),
     'signal': Layer(animations.DrainTopDown, {'colour': 'pastel-red', 'frames': 15}, [0]),
     '202': Layer(animations.Sparkle, {'colour': 'coral', 'frames': 5, 'padding': 20}, [x for x in range(5)]),
+
     'mini': Layer(animations.BorderFlash, {'colour': 'pastel-orange', 'frames': 10}, [1,3]),
     'verb': Layer(animations.RandomLines, {'colour': 'off-white', 'frames': 5}, [x for x in range(5)]),
     'dusty': Layer(animations.DrainOutsideIn, {'colour': 'pastel-red', 'frames': 100, 'persistent': True}, [1]),
@@ -131,7 +146,6 @@ for x in range(5):
         )
 
 blinds = Programme('blinds', {
-    # Drums
     'kick': Layer(animations.DrainOutsideIn, {'colour': 'pastel-yellow', 'frames': 5}, [2]),
     'pole': Layer(animations.DrainMiddleOut, {'colour': 'pastel-orange', 'frames': 5}, [0,4]),
 
@@ -152,7 +166,11 @@ blinds = Programme('blinds', {
 })
 
 hoodie = Programme('hoodie', {
-    # Juno
+    'kick': Layer(animations.BottomFlash, {'colour': "dim-white", 'frames': 5}, [0,4]),
+    'snare': Layer(animations.TopFlash, {'colour': "dim-white", 'frames': 5}, [2]),
+
+    'volca': Layer(animations.DrainMiddleOut, {'colour': 'mellow-violet', 'frames': 7}, [3]),
+
     'juno-a': Layer(animations.FullFlash, {'colour': 'teal', 'frames': 15}, [1,3]),
     'juno-b': ComplexLayer(
         bottom=53, top=81,
@@ -190,6 +208,7 @@ hoodie = Programme('hoodie', {
             61: Layer(animations.FillOutsideIn, {'colour': 'pastel-violet', 'frames': 55, 'padding': 55}, [0,2,4]),
             62: Layer(animations.FillMiddleOut, {'colour': 'cyan', 'frames': 55, 'padding': 55}, [0,2,4]),
             63: Layer(animations.FillOutsideIn, {'colour': 'indigo', 'frames': 55, 'padding': 55}, [0,2,4]),
+
             # B Section
             72: Layer(animations.FillTopDown, {'colour': 'pastel-yellow', 'frames': 20, 'padding': 20}, [0,2,4]),
             73: Layer(animations.FillBottomUp, {'colour': 'pastel-green', 'frames': 20, 'padding': 20}, [0,2,4]),
